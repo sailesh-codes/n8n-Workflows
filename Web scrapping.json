@@ -1,0 +1,130 @@
+{
+  "name": "Web scrapping",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        -32
+      ],
+      "id": "aa5233f8-db15-43c2-9a4d-000204077ee6",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "url": "https://nicksaraev.com/",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        112,
+        -32
+      ],
+      "id": "77624766-fc92-4f82-81b2-7ff834795fca",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "html": "={{ $json.data }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        320,
+        -32
+      ],
+      "id": "b0257e11-e171-4b6a-a0f8-0835d1c2a9dd",
+      "name": "Markdown"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "you are helpful , intelligent web scrapping assistant",
+              "role": "system"
+            },
+            {
+              "content": "=You are an expert assistant. From the markdown content below, extract all URLs (links) into a JSON array format. Return only the JSON array of URLs.\n\nMarkdown content:\n\"\"\"\n{{ $json[\"data\"] }}\n\"\"\"\n\nOutput:\n[\n  \"https://example1.com\",\n  \"https://example2.com\",\n  ...\n]\n"
+            },
+            {
+              "content": "={{ $json.data }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        528,
+        -32
+      ],
+      "id": "1e3b9e5a-50c4-4262-a4ba-07c09d82cf11",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "b4xUkKu50E4oKb4x",
+          "name": "web scrapping new"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4f34f595-934e-4110-9409-ad483c402f55",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fbe820467fa6c8f6117822e80e41ad3bd8798d254910b5bc80ee24ca7b68ed85"
+  },
+  "id": "BMta5wAKCsPKPhhx",
+  "tags": []
+}
